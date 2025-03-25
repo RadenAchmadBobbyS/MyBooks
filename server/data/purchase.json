@@ -1,0 +1,5 @@
+[
+    { "userId": 1, "bookId": 2, "transactionId": "txn001", "paymentStatus": "success", "grossAmount": 150 },
+    { "userId": 2, "bookId": 3, "transactionId": "txn002", "paymentStatus": "success", "grossAmount": 200 },
+    { "userId": 3, "bookId": 2, "transactionId": "txn003", "paymentStatus": "pending", "grossAmount": 150 }
+  ]
