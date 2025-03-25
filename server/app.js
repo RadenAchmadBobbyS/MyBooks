@@ -23,6 +23,7 @@ app.post('/favorites', authMiddleware.authenticate, favoriteController.addToFavo
 app.get('/favorites', authMiddleware.authenticate, favoriteController.getFavotire)
 
 app.post('/purchases', authMiddleware.authenticate, purchaseController.createPurchase)
+app.post('/midtrans-webhook', purchaseController.midtransWebHook)
 
 app.get('/user', authMiddleware.authenticate, userController.getUser)
 

@@ -3,7 +3,8 @@
       "title": "Book One", 
       "author": "Author One", 
       "description": "This is book one.", 
-      "price": 100, "status": "free", 
+      "price": 0, 
+      "status": "free", 
       "content": "Lorem ipsum dolor sit amet." 
     },
     {   
@@ -20,6 +21,30 @@
       "description": "This is book three.", 
       "price": 200, 
       "status": "paid", 
+      "content": "Ut enim ad minim veniam." 
+    },
+    { 
+      "title": "Book Four", 
+      "author": "Author Four", 
+      "description": "This is book Four.", 
+      "price": 200, 
+      "status": "paid", 
+      "content": "Ut enim ad minim veniam." 
+    },
+    { 
+      "title": "Book Five", 
+      "author": "Author Five", 
+      "description": "This is book Five.", 
+      "price": 0, 
+      "status": "free", 
+      "content": "Ut enim ad minim veniam." 
+    },
+    { 
+      "title": "Book Six", 
+      "author": "Author Six", 
+      "description": "This is book Six.", 
+      "price": 0, 
+      "status": "free", 
       "content": "Ut enim ad minim veniam." 
     }
 ]

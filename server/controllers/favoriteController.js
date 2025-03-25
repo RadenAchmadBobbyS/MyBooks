@@ -12,18 +12,18 @@ class favoriteController {
 
             const isFree = parseFloat(book.price) === 0;
             const hasPurchased = await Purchase.findOne({
-                where: { userId: bookId }
+                where: { userId, bookId, paymentStatus: 'paid' }
             })
 
             if (!isFree && !hasPurchased) return res.status(403).json({ message: 'You can only favorite free or purchased books' })
 
             const existingFavorite = await Favorite.findOne({
-                where: { userId: bookId }
+                where: { userId, bookId }
             })
             if (existingFavorite) return res.status(400).json({ message: 'Book already in favorites' })
 
             const favorite = await Favorite.create({
-                userId: req.user.id,
+                userId,
                 bookId
             });
             res.status(200).json(favorite);

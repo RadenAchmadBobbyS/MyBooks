@@ -28,7 +28,7 @@ module.exports = {
     });
 
     const purchases = require('../data/purchase.json').map(el => {
-      el.createdAt = el.updatedAt = el.paymentDate = new Date()
+      el.createdAt = el.updatedAt = new Date()
       return el
     });
 

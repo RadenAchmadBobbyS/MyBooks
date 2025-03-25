@@ -27,7 +27,7 @@ module.exports = {
       },
       transactionId: {
         type: Sequelize.STRING,
-        allowNull: false,
+        allowNull: true,
         unique: true
       },
       paymentStatus: {
@@ -40,7 +40,7 @@ module.exports = {
       },
       paymentDate: {
         type: Sequelize.DATE,
-        allowNull: false
+        allowNull: true
       },
       createdAt: {
         allowNull: false,
