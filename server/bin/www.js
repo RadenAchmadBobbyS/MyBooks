@@ -1,7 +1,7 @@
 const app = require("../app");
 
-const port = process.env.PORT || 3000
+const PORT = process.env.PORT || 3000
 
-app.listen(port, () => {
-    console.log(`f u ${port} times`)
+app.listen(PORT, () => {
+    console.log(`http://localhost:${PORT}`)
 })
