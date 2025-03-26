@@ -1,0 +1,10 @@
+
+    npm init -y / npm i
+    npm i pg express sequelize sequelize-cli 
+    npm install google-auth-library jsonwebtoken dotenv express
+    npm install midtrans-client
+
+    npx sequelize-cli model:create --name User --attributes email:string,name:string,googleId:string,role:string
+    npx sequelize-cli model:create --name Book --attributes title:string,author:string,description:text,price:decimal,status:string,content:text
+    npx sequelize-cli model:create --name Favorite --attributes userId:integer,bookId:integer
+    npx sequelize-cli model:create --name Purchase --attributes userId:integer,bookId:integer,transactionId:string,paymentStatus:string,grossAmount:decimal,paymentDate:date

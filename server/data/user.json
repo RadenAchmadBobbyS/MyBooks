@@ -1,0 +1,5 @@
+[
+    { "email": "user1@gmail.com", "name": "User One", "googleId": "googleid1", "role": "user" },
+    { "email": "user2@gmail.com", "name": "User Two", "googleId": "googleid2", "role": "user" },
+    { "email": "admin@gmail.com", "name": "Admin User", "googleId": "googleid3", "role": "admin" }
+  ]
