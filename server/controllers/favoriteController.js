@@ -6,11 +6,11 @@ class favoriteController {
             const { bookId } = req.body;
             const userId = req.user.id;
 
-            const book = await Book.findByPk(bookId);
+            const books = await Book.findByPk(bookId);
 
-            if (!book) return res.status(404).json({ message: 'Book not found' })
+            if (!books) return res.status(404).json({ message: 'Book not found' })
 
-            const isFree = parseFloat(book.price) === 0;
+            const isFree = parseFloat(books.price) === 0;
             const hasPurchased = await Purchase.findOne({
                 where: { userId, bookId, paymentStatus: 'paid' }
             })
@@ -22,11 +22,11 @@ class favoriteController {
             })
             if (existingFavorite) return res.status(400).json({ message: 'Book already in favorites' })
 
-            const favorite = await Favorite.create({
+            const favorites = await Favorite.create({
                 userId,
                 bookId
             });
-            res.status(200).json(favorite);
+            res.status(200).json(favorites);
         } catch (error) {
             console.log(error);
             res.status(500).json({ message: 'Internal server error' });
@@ -35,7 +35,7 @@ class favoriteController {
 
     static async getFavotire(req, res) {
         try {
-            const favorite = await Favorite.findAll({
+            const favorites = await Favorite.findAll({
                 where: { userId: req.user.id },
                 include: {
                     model: Book,
@@ -43,7 +43,7 @@ class favoriteController {
                 }
             });
 
-            res.status(200).json(favorite);
+            res.status(200).json(favorites);
         } catch (error) {
             console.log(error);
             res.status(500).json({ message: 'Internal server error' });

@@ -3,7 +3,7 @@ const { Purchase, User, Book } = require('../models')
 class transactionController {
     static async getAllTransactions(req, res) {
         try {
-            const transaction = await Purchase.findAll({
+            const transactions = await Purchase.findAll({
                 where: { userId: req.user.id},
                 include: {
                     model: Book,
@@ -12,7 +12,7 @@ class transactionController {
                 order: [['paymentDate', 'DESC']]
             });
 
-            res.status(200).json(transaction);
+            res.status(200).json(transactions);
         } catch (error) {
             console.log(error);
             res.status(500).json({ message: 'Internal server error' })

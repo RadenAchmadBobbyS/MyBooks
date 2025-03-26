@@ -7,8 +7,8 @@ class purchaseController {
             const { bookId } = req.body;
             const userId = req.user.id;
 
-            const book = await Book.findByPk(bookId);
-            if (!book) return res.status(404).json({ message: 'Book not found' })
+            const books = await Book.findByPk(bookId);
+            if (!books) return res.status(404).json({ message: 'Book not found' })
 
             let snap = new midtransClient.Snap({
                 isProduction: false,
@@ -32,7 +32,7 @@ class purchaseController {
                 bookId,
                 transactionId: parameter.transaction_details.order_id,
                 paymentStatus: 'pending',
-                grossAmount: book.price,
+                grossAmount: books.price,
                 paymentDate: new Date()
             });
 
