@@ -2,6 +2,7 @@ const { Op } = require('sequelize');
 const { Book } = require('../models')
 
 class bookController {
+    // user get books, books-detail, search-books
     static async getAllBooks(req, res) {
         try {
             const books = await Book.findAll();
@@ -50,6 +51,7 @@ class bookController {
         }
     }
 
+    // admin crud books
     static async addBook(req, res) {
         try {
             const { title, author, description, price, status, content } = req.body;

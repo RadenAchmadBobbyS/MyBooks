@@ -2,15 +2,16 @@ const express = require('express')
 const app = express()
 const port = process.env.PORT || 3000
 
+const cors = require('cors')
 const dotenv = require('dotenv')
 const userController = require('./controllers/userController')
 const bookController = require('./controllers/bookController')
 const favoriteController = require('./controllers/favoriteController')
 const purchaseController = require('./controllers/purchaseController')
 const authMiddleware = require('./middlewares/authMiddleware')
-const cors = require('cors')
 const transactionController = require('./controllers/transactionController')
 const adminController = require('./controllers/adminController')
+const geminiController = require('./controllers/geminiController')
 
 dotenv.config()
 app.use(express.json())
@@ -25,6 +26,9 @@ app.post('/logout', userController.logout)
 app.get('/users/profile', authMiddleware.authenticate, userController.getUserProfile)
 app.put('/users/profile', authMiddleware.authenticate, userController.updateUserProfile)
 app.get('/users/purchases', authMiddleware.authenticate, userController.getUserPurchase)
+
+// gemini AI chat endpoint
+app.post('/gemini', geminiController.generateRespons)
 
 // user books endpoints
 app.get('/books', bookController.getAllBooks)
