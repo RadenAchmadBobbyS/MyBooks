@@ -9,15 +9,15 @@ const { Op } = require('sequelize');
 
                 // gemini recomendation books
                 if (prompt.toLowerCase().includes("rekomendasi-buku")) {
-                    const book = await Book.findAll({ limit: 5 });
-                    const bookList = book.map(el => `${book.title} - ${book.author}`).join("\n");
+                    const books = await Book.findAll({ limit: 5 });
+                    const bookList = books.map(el => `${el.title} - ${el.author}`).join("\n");
                     return res.json({ response: `Berikut beberapa rekomendasi buku:\n ${bookList}`});
                 }
 
                 // gemini search books
                 if (prompt.toLowerCase().includes("cari buku")) {
                     const query = prompt.replace("cari buku", "").trim();
-                    const book = await Book.findAll({
+                    const books = await Book.findAll({
                         where: {
                             title: {
                                 [Op.ilike]: `%${query}%`
@@ -25,11 +25,11 @@ const { Op } = require('sequelize');
                         }
                     });
 
-                    if (book.length === 0) {
+                    if (books.length === 0) {
                         return res.json({ response: `Maaf, buku ${query} tidak ditemukan.`})
                     }
 
-                    const bookList = book.map((book) => `${book.title} - ${book.author}`).join("\n");
+                    const bookList = books.map((book) => `${book.title} - ${book.author}`).join("\n");
                     return res.json({ response: `Buku yang ditemukan: \n${bookList}`});
                 }
 

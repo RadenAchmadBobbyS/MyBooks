@@ -3,7 +3,7 @@ const { Purchase, User, Book } = require('../models')
 class adminController { 
     static async getUserTransaction(req, res) {
         try {
-            const transaction = await Purchase.findAll({
+            const transactions = await Purchase.findAll({
                 include: [
                     { model: User, attributes: ['id', 'name', 'email'] },
                     { model: Book, attributes: ['id', 'title', 'author', 'price'] }
@@ -11,7 +11,7 @@ class adminController {
                 order: [[ 'paymentDate', 'DESC' ]]
             });
 
-            res.status(200).json(transaction);
+            res.status(200).json(transactions);
         } catch (error) {
             console.log(error);
             res.status(500).json({ message: 'Internal server error' })
@@ -28,7 +28,7 @@ class adminController {
                 ]
             });
 
-            if (!transaction) return res.status(404).json({ message: 'Transaction not found' });
+            if (!transaction) return res.status(404).json({ message: 'transactions not found' });
             res.status(200).json(transaction);
         } catch (error) {
             console.log(error);
@@ -38,8 +38,8 @@ class adminController {
 
     static async getAllusers(req, res) {
         try {
-            const user = await User.findAll()
-            res.status(200).json(user);
+            const users = await User.findAll()
+            res.status(200).json(users);
         } catch (error) {
             console.log(error);
             res.status(500).json({ message: 'Internal server error' })

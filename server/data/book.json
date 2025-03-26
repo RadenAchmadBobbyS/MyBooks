@@ -5,7 +5,8 @@
       "description": "This is book one.", 
       "price": 0, 
       "status": "free", 
-      "content": "Lorem ipsum dolor sit amet." 
+      "content": "Lorem ipsum dolor sit amet.",
+      "imgUrl": "https://play.google.com/books/publisher/content/images/frontcover/bWabEAAAQBAJ?fife=w512-h512" 
     },
     {   
         "title": "Book Two", 
@@ -13,7 +14,8 @@
         "description": "This is book two.", 
         "price": 150, 
         "status": "paid", 
-        "content": "Sed do eiusmod tempor incididunt ut labore." 
+        "content": "Sed do eiusmod tempor incididunt utlabore.", 
+        "imgUrl": "https://play.google.com/books/publisher/content/images/frontcover/VaS-DwAAQBAJ?fife=w512-h512" 
     },
     { 
       "title": "Book Three", 
@@ -21,7 +23,8 @@
       "description": "This is book three.", 
       "price": 200, 
       "status": "paid", 
-      "content": "Ut enim ad minim veniam." 
+      "content": "Ut enim ad minim veniam.",
+      "imgUrl": "https://play.google.com/books/publisher/content/images/frontcover/22zoEAAAQBAJ?fife=w512-h512" 
     },
     { 
       "title": "Book Four", 
@@ -29,7 +32,8 @@
       "description": "This is book Four.", 
       "price": 200, 
       "status": "paid", 
-      "content": "Ut enim ad minim veniam." 
+      "content": "Ut enim ad minim veniam.",
+      "imgUrl": "https://play.google.com/books/publisher/content/images/frontcover/kUZDEQAAQBAJ?fife=w512-h512" 
     },
     { 
       "title": "Book Five", 
@@ -37,7 +41,8 @@
       "description": "This is book Five.", 
       "price": 0, 
       "status": "free", 
-      "content": "Ut enim ad minim veniam." 
+      "content": "Ut enim ad minim veniam.",
+      "imgUrl": "https://play.google.com/books/publisher/content/images/frontcover/t0ZDEQAAQBAJ?fife=w512-h512" 
     },
     { 
       "title": "Book Six", 
@@ -45,6 +50,7 @@
       "description": "This is book Six.", 
       "price": 0, 
       "status": "free", 
-      "content": "Ut enim ad minim veniam." 
+      "content": "Ut enim ad minim veniam.",
+      "imgUrl": "https://play.google.com/books/publisher/content/images/frontcover/8WpCEQAAQBAJ?fife=w512-h512" 
     }
 ]
