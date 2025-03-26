@@ -1,7 +1,9 @@
+if (process.env.NODE_ENV !== "production") {
+    require('dotenv').config()
+}
+
 const express = require('express')
 const app = express()
-const port = process.env.PORT || 3000
-
 const cors = require('cors')
 const dotenv = require('dotenv')
 const userController = require('./controllers/userController')
@@ -61,6 +63,4 @@ app.get('/admin/users', authMiddleware.authenticate, authMiddleware.isAdmin, adm
 app.put('/admin/users/:id', authMiddleware.authenticate, authMiddleware.isAdmin, adminController.updateUserRole)
 app.delete('/admin/users/:id', authMiddleware.authenticate, authMiddleware.isAdmin, adminController.deleteUser)
 
-app.listen(port, () => {
-    console.log(`f u ${port} times`)
-})
+module.exports = app

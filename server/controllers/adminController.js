@@ -66,13 +66,13 @@ class adminController {
 
     static async deleteUser(req, res) {
         try {
-            const { id } = req.user.id;
+            const id = req.params.id;
 
             const user = await User.findByPk(id);
             if (!user) return res.status(404).json({ message: 'User not found' })
 
-            await user.destroy();
-            res.status(200).json({ message: 'user deleted' })
+            await User.destroy({ where: { id: id }});
+            res.status(200).json({ message: `user ${user.name} success deleted` })
         } catch (error) {
             console.log(error);
             res.status(500).json({ message: 'Internal server error' })

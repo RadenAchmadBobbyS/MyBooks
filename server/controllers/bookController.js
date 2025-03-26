@@ -78,6 +78,8 @@ class bookController {
             const id = req.params.id
             const book = await Book.findByPk(id)
 
+            if (!book) return res.status(404).json({ message: `Book with ${id} not found`})
+
             book.title = title
             book.author = author
             book.description = description
