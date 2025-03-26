@@ -15,7 +15,7 @@ class purchaseController {
                 serverKey: process.env.MIDTRANS_SERVER_KEY
             });
 
-            let paramter = {
+            let parameter = {
                 transaction_details: {
                     order_id: `order-${Date.now()}`,
                     gross_amount: Number(book.price)
@@ -25,12 +25,12 @@ class purchaseController {
                 }
             };
 
-            const transaction = await snap.createTransaction(paramter);
+            const transaction = await snap.createTransaction(parameter);
 
             const purchase = await Purchase.create({
                 userId,
                 bookId,
-                transactionId: paramter.transaction_details.order_id,
+                transactionId: parameter.transaction_details.order_id,
                 paymentStatus: 'pending',
                 grossAmount: book.price,
                 paymentDate: new Date()

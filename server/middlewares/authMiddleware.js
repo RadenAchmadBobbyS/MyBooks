@@ -1,20 +1,17 @@
 const jwt = require('jsonwebtoken');
-const dotenv = require('dotenv');
-const { OAuth2Client } = require('google-auth-library')
 const { User } = require('../models')
-
-dotenv.config();
-const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 class authMiddleware {
     static authenticate(req, res, next) {
         try {
-            const token = req.headers['authorization']?.split(' ')[1];
+            const { authorization } = req.headers;
 
-            if (!token) return res.status(403).json({ message: 'Token not provided' })
+            if (!authorization) return res.status(401).json({ message: 'Unauthorized' })
 
+            const token = authorization.split(' ')[1];
             const decoded = jwt.verify(token, process.env.JWT_SECRET);
             req.user = decoded;
+
             next()
         } catch (error) {
             console.log(error)
@@ -49,6 +46,20 @@ class authMiddleware {
         } catch (error) {
             console.log(error);
             res.status(401).json({ message: 'Invalid Google token' });
+        }
+    }
+
+    static async isAdmin(req, res, next) {
+        try {
+            const user = await User.findByPk(req.user.id);
+            if (!user || user.role !== 'admin') {
+                return res.status(403).json({ message: 'Forbidden: Admin access only' });
+            }
+
+            next();
+        } catch (error) {
+            console.log(error);
+            res.status(500).json({ message: 'Internal server error' });
         }
     }
 }
