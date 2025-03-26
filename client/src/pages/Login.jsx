@@ -32,10 +32,8 @@ export default function Login() {
     
         google.accounts.id.renderButton(
           document.getElementById("google-btn"),
-          { theme: "outline", size: "large" }  // customization attributes
+          { theme: "outline", size: "large" }
         );
-    
-        // google.accounts.id.prompt(); // also display the One Tap dialog
     
       }, []);
 
