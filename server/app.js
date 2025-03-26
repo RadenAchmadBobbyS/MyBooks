@@ -9,6 +9,8 @@ const favoriteController = require('./controllers/favoriteController')
 const purchaseController = require('./controllers/purchaseController')
 const authMiddleware = require('./middlewares/authMiddleware')
 const cors = require('cors')
+const transactionController = require('./controllers/transactionController')
+const adminController = require('./controllers/adminController')
 
 dotenv.config()
 app.use(express.json())
@@ -26,13 +28,13 @@ app.get('/users/purchases', authMiddleware.authenticate, userController.getUserP
 
 // user books endpoints
 app.get('/books', bookController.getAllBooks)
-app.get('/books/:id')
-app.get('/books/search')
+app.get('/books/:id', bookController.getBookById)
+app.get('/books/search', bookController.searchBooks)
 
 // admin only endpoints
-app.post('/books')
-app.put('/books/:id')
-app.delete('/books/:id')
+app.post('/books', authMiddleware.authenticate, authMiddleware.isAdmin, bookController.addBook)
+app.put('/books/:id', authMiddleware.authenticate, authMiddleware.isAdmin, bookController.updateBook)
+app.delete('/books/:id', authMiddleware.authenticate, authMiddleware.isAdmin, bookController.deleteBook)
 
 // favorite endpoints
 app.post('/favorites', authMiddleware.authenticate, favoriteController.addToFavorite)
@@ -43,17 +45,17 @@ app.post('/purchases', authMiddleware.authenticate, purchaseController.createPur
 app.post('/midtrans-webhook', purchaseController.midtransWebHook)
 
 // user transaction endpoints
-app.get('/transactions')
-app.get('/transactions/:id')
+app.get('/transactions', authMiddleware.authenticate, transactionController.getAllTransactions)
+app.get('/transactions/:id', authMiddleware.authenticate, transactionController.getTransactionById)
 
 // admin transaction endpoints
-app.get('/admin/transactions')
-app.get('/admin/transactions/:id')
+app.get('/admin/transactions', authMiddleware.authenticate, authMiddleware.isAdmin, adminController.getUserTransaction)
+app.get('/admin/transactions/:id', authMiddleware.authenticate, authMiddleware.isAdmin, adminController.getUserTransactionById)
 
 // admin endpoints
-app.get('/admin/users')
-app.put('/admin/users/:id')
-app.delete('/admin/users/:id')
+app.get('/admin/users', authMiddleware.authenticate, authMiddleware.isAdmin, adminController.getAllusers)
+app.put('/admin/users/:id', authMiddleware.authenticate, authMiddleware.isAdmin, adminController.updateUserRole)
+app.delete('/admin/users/:id', authMiddleware.authenticate, authMiddleware.isAdmin, adminController.deleteUser)
 
 app.listen(port, () => {
     console.log(`f u ${port} times`)
