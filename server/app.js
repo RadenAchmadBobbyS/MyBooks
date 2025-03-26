@@ -21,6 +21,10 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(cors())
 
+app.get('/', (req, res) => {
+    console.log(`Hello Hoyyy`)
+})
+
 // user endpoints
 app.post('/google-login', userController.googleLogin)
 app.post('/logout', userController.logout)
