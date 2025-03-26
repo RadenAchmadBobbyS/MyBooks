@@ -22,7 +22,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors())
 
 app.get('/', (req, res) => {
-    console.log(`Hello Hoyyy`)
+    res.json({ message: 'Hello Hoyyy'})
 })
 
 // user endpoints
