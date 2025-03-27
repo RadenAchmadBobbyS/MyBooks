@@ -18,7 +18,7 @@ class purchaseController {
             let parameter = {
                 transaction_details: {
                     order_id: `order-${Date.now()}`,
-                    gross_amount: Number(book.price)
+                    gross_amount: Number(books.price)
                 },
                 customer_details: {
                     email: req.user.email

@@ -14,7 +14,7 @@ class geminiController {
                 }
 
                 const bookList = books.map((el, idx) => `${idx + 1}. ${el.title} - ${el.author}`).join("\n");
-                return res.json({ response: `📚 Berikut beberapa rekomendasi buku:\n\n${bookList}` });
+                return res.json({ response: `Berikut beberapa rekomendasi buku:\n\n${bookList}` });
             }
 
             const searchMatch = prompt.match(/cari buku (.+)/i);
