@@ -44,7 +44,11 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       defaultValue: 'free'
     },
-    content: DataTypes.TEXT
+    content: DataTypes.TEXT,
+    imgUrl: {
+      type: DataTypes.TEXT,
+      allowNull: false
+    },
   }, {
     sequelize,
     modelName: 'Book',
