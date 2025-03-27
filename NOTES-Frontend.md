@@ -17,11 +17,14 @@
 
 // tailwind installation
 
-    npm install tailwindcss @tailwindcss/vite, plugins: [tailwindcss()]
+    npm install tailwindcss @tailwindcss/vite
 
 // add to config
 
-    import tailwindcss from '@tailwindcss/vite'
+    import tailwindcss from '@tailwindcss/vite' => plugins: [tailwindcss()]
+
+// instral daisiy
+
     npm i -D daisyui@latest
 
     @import "tailwindcss";

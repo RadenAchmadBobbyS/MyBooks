@@ -1,6 +1,6 @@
 
 
-export default function NavbarPage() {
+export default function Purchases() {
 
 
 
