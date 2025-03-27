@@ -3,8 +3,79 @@
     npm i pg express sequelize sequelize-cli 
     npm install google-auth-library jsonwebtoken dotenv express
     npm install midtrans-client
+    npm install -g react-devtools
+    npm install @google/generative-ai
+    npm install -D tailwindcss postcss autoprefixer
+    npx tailwindcss init -p
+    npm install @reduxjs/toolkit react-redux
+    npm install lucide-react
+    npm install framer-motion
+    npm install react-hook-form
 
     npx sequelize-cli model:create --name User --attributes email:string,name:string,googleId:string,role:string
     npx sequelize-cli model:create --name Book --attributes title:string,author:string,description:text,price:decimal,status:string,content:text
     npx sequelize-cli model:create --name Favorite --attributes userId:integer,bookId:integer
     npx sequelize-cli model:create --name Purchase --attributes userId:integer,bookId:integer,transactionId:string,paymentStatus:string,grossAmount:decimal,paymentDate:date
+
+
+## Autentikasi & User Profile
+
+Login dengan Google (POST /google-login)
+
+Logout (POST /logout)
+
+Lihat Profil (GET /users/profile)
+
+Edit Profil (PUT /users/profile)
+
+Lihat Riwayat Pembelian (GET /users/purchases)
+
+## Manajemen Buku
+
+Lihat Semua Buku (GET /books)
+
+Cari Buku (GET /books/search?q=...)
+
+Detail Buku (GET /books/:id)
+
+Admin: Tambah Buku (POST /books)
+
+Admin: Edit Buku (PUT /books/:id)
+
+Admin: Hapus Buku (DELETE /books/:id)
+
+## Wishlist (Favorit)
+
+Tambah ke Favorit (POST /favorites)
+
+Lihat Favorit (GET /favorites)
+
+## Pembelian & Transaksi
+
+Checkout (POST /purchases)
+
+Terima Webhook Midtrans (POST /midtrans-webhook)
+
+Lihat Semua Transaksi User (GET /transactions)
+
+Lihat Detail Transaksi (GET /transactions/:id)
+
+## Admin Management
+
+Admin: Lihat Semua User (GET /admin/users)
+
+Admin: Edit Peran User (PUT /admin/users/:id)
+
+Admin: Hapus User (DELETE /admin/users/:id)
+
+Admin: Lihat Semua Transaksi (GET /admin/transactions)
+
+Admin: Detail Transaksi (GET /admin/transactions/:id)
+
+Admin: Dashboard Statistik Transaksi (Grafik & Laporan)
+
+## Dashboard Admin (Grafik & Laporan)
+
+Grafik status transaksi (Pending, Paid, Failed)
+
+Ekspor laporan ke CSV/PDF

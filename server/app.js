@@ -42,9 +42,9 @@ app.get('/books/:id', bookController.getBookById)
 app.get('/books/search', bookController.searchBooks)
 
 // admin only endpoints
-app.post('/books', authMiddleware.authenticate, authMiddleware.isAdmin, bookController.addBook)
-app.put('/books/:id', authMiddleware.authenticate, authMiddleware.isAdmin, bookController.updateBook)
-app.delete('/books/:id', authMiddleware.authenticate, authMiddleware.isAdmin, bookController.deleteBook)
+app.post('/admin/books', authMiddleware.authenticate, authMiddleware.isAdmin, bookController.addBook)
+app.put('/admin/books/:id', authMiddleware.authenticate, authMiddleware.isAdmin, bookController.updateBook)
+app.delete('/admin/books/:id', authMiddleware.authenticate, authMiddleware.isAdmin, bookController.deleteBook)
 
 // favorite endpoints
 app.post('/favorites', authMiddleware.authenticate, favoriteController.addToFavorite)
