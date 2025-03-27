@@ -48,7 +48,7 @@ app.delete('/books/:id', authMiddleware.authenticate, authMiddleware.isAdmin, bo
 
 // favorite endpoints
 app.post('/favorites', authMiddleware.authenticate, favoriteController.addToFavorite)
-app.get('/favorites', authMiddleware.authenticate, favoriteController.getFavotire)
+app.get('/favorites', authMiddleware.authenticate, favoriteController.getFavorite)
 
 // purchase endpoints
 app.post('/purchases', authMiddleware.authenticate, purchaseController.createPurchase)

@@ -6,11 +6,11 @@ class favoriteController {
             const { bookId } = req.body;
             const userId = req.user.id;
 
-            const books = await Book.findByPk(bookId);
+            const book = await Book.findByPk(bookId);
 
-            if (!books) return res.status(404).json({ message: 'Book not found' })
+            if (!book) return res.status(404).json({ message: 'Book not found' })
 
-            const isFree = parseFloat(books.price) === 0;
+            const isFree = parseFloat(book.price) === 0;
             const hasPurchased = await Purchase.findOne({
                 where: { userId, bookId, paymentStatus: 'paid' }
             })
@@ -33,13 +33,13 @@ class favoriteController {
         }
     }
 
-    static async getFavotire(req, res) {
+    static async getFavorite(req, res) {
         try {
             const favorites = await Favorite.findAll({
                 where: { userId: req.user.id },
                 include: {
                     model: Book,
-                    attributes: ['id', 'title', 'author', 'price']
+                    attributes: ['id', 'title', 'author', 'price', 'imgUrl']
                 }
             });
 
