@@ -40,6 +40,7 @@ app.post('/gemini', geminiController.generateRespons)
 app.get('/books', bookController.getAllBooks)
 app.get('/books/:id', bookController.getBookById)
 app.get('/books/search', bookController.searchBooks)
+app.get('/books/read/:bookId', authMiddleware.authenticate, purchaseController.readBook);
 
 // admin only endpoints
 app.post('/admin/books', authMiddleware.authenticate, bookController.addBook)

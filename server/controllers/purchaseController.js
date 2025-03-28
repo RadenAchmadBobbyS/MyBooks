@@ -20,6 +20,19 @@ class purchaseController {
                 return res.status(400).json({ message: 'User email is required' });
               }
 
+            const existingPurchase = await Purchase.findOne({
+                where: {
+                    userId,
+                    bookId,
+                    paymentStatus: 'paid'  // Hanya cek transaksi yang sudah dibayar
+                }
+            });
+    
+            if (existingPurchase) {
+                return res.status(400).json({ message: 'You have already purchased this book' });
+            }
+    
+
             const books = await Book.findByPk(bookId);
             if (!books) return res.status(404).json({ message: 'Book not found' });
 
@@ -71,46 +84,91 @@ class purchaseController {
 
     static async midtransWebHook(req, res) {
         try {
-            console.log("Headers:", req.headers);
-            console.log("Parsed JSON:", req.body);
-
-            const { order_id, transaction_status } = req.body
-
+            console.log("Received Webhook:", req.body);
+    
+            const { order_id, transaction_status } = req.body;
+    
             if (!order_id) {
                 return res.status(400).json({ message: "Missing order_id" });
             }
-
+    
             const validStatuses = ['settlement', 'capture', 'expire', 'cancel', 'pending'];
             if (!validStatuses.includes(transaction_status)) {
                 console.warn(`Unexpected transaction_status: ${transaction_status}`);
-                return res.status(500).json({ message: 'Internal server error' });
+                return res.status(400).json({ message: 'Invalid transaction status' });
             }
-
-            let resolvedStatus = transaction_status;
-
-            const purchase = await Purchase.findOne({ where: { transactionId: order_id }});
-            if (!purchase) return res.status(404).json({ message: 'Transaction not found'});
-
+    
             let paymentStatus;
-
-            if (resolvedStatus === 'settlement' || resolvedStatus === 'capture') {
+    
+            if (transaction_status === 'settlement' || transaction_status === 'capture') {
                 paymentStatus = 'paid';
-            } else if (resolvedStatus === 'expire' || resolvedStatus === 'cancel') {
+            } else if (transaction_status === 'expire' || transaction_status === 'cancel') {
                 paymentStatus = 'failed';
             } else {
                 paymentStatus = 'pending';
             }
-
-            await Purchase.update({ 
-                paymentStatus, paymentDate: new Date() 
-            }, { where: { transactionId: order_id }});
-
+    
+            const purchase = await Purchase.findOne({ where: { transactionId: order_id }});
+            if (!purchase) {
+                console.log(`Transaction not found: ${order_id}`);
+                return res.status(404).json({ message: 'Transaction not found' });
+            }
+    
+            await purchase.update({ 
+                paymentStatus, 
+                paymentDate: new Date() 
+            });
+    
+            console.log(`Transaction ${order_id} updated to status: ${paymentStatus}`);
             res.status(200).json({ message: 'Transaction status updated' });
+    
         } catch (error) {
-            console.log(error);
+            console.log("Webhook Error:", error);
             res.status(500).json({ message: 'Internal server error' });
         }
     }
+
+    static async readBook(req, res) {
+        const { bookId } = req.params;
+        const userId = req.user.id;
+    
+        try {
+            // Periksa apakah pengguna telah membeli buku
+            const purchase = await Purchase.findOne({
+                where: {
+                    bookId: bookId,
+                    userId: userId,
+                    paymentStatus: 'paid'
+                }
+            });
+    
+            if (!purchase) {
+                return res.status(403).json({ message: 'Book not purchased' });
+            }
+    
+            // Cari buku berdasarkan ID
+            const book = await Book.findByPk(bookId);
+    
+            if (!book) {
+                return res.status(404).json({ message: 'Book not found' });
+            }
+    
+            // Kembalikan konten buku (misalnya, teks atau HTML)
+            res.status(200).json({
+                title: book.title,
+                author: book.author,
+                content: book.content // Pastikan `book.content` menyimpan teks atau URL buku
+            });
+        } catch (error) {
+            console.error('Error reading book:', error);
+            return res.status(500).json({ message: 'Internal server error' });
+        }
+    }
+
 }
+
+    
+
+    
 
 module.exports = purchaseController
