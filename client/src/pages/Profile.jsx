@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import http from "../helpers/http";
 import Swal from "sweetalert2";
+import { updateTransactionStatus } from "../store/transactionSlice";
 
 export default function Profile() {
     const token = useSelector((state) => state.auth?.token) || localStorage.getItem("token");
     const name = localStorage.getItem('name');
     const [transactions, setTransactions] = useState([]);
+    const dispatch = useDispatch();
 
     // Fungsi untuk mengambil data transaksi dari backend
     async function fetchTransaction() {
@@ -35,8 +37,35 @@ export default function Profile() {
         }
     }
 
+    // Fungsi untuk mengupdate status pembayaran
+    const handleUpdateStatus = async (transactionId, newStatus) => {
+        try {
+            await dispatch(updateTransactionStatus({ transactionId, status: newStatus })).unwrap();
+            Swal.fire({
+                title: "Success!",
+                text: "Payment status updated successfully.",
+                icon: "success",
+            });
+            fetchTransaction(); // Refresh data transaksi setelah update
+        } catch (error) {
+            Swal.fire({
+                title: "Error!",
+                text: error || "Failed to update payment status.",
+                icon: "error",
+            });
+        }
+    };
+
     useEffect(() => {
         fetchTransaction(); // Ambil data transaksi saat komponen dirender
+
+        // Tambahkan polling untuk memperbarui data transaksi setiap 10 detik
+        const interval = setInterval(() => {
+            fetchTransaction();
+        }, 10000);
+
+        // Bersihkan interval saat komponen di-unmount
+        return () => clearInterval(interval);
     }, []);
 
     return (
@@ -117,17 +146,15 @@ export default function Profile() {
                                             <td className="border border-gray-300 px-4 py-2">{transaction.Book?.title || "Unknown Book"}</td>
                                             <td className="border border-gray-300 px-4 py-2">{transaction.transactionId}</td>
                                             <td className="border border-gray-300 px-4 py-2">
-                                                <span
-                                                    className={
-                                                        transaction.paymentStatus === "paid"
-                                                            ? "text-green-500"
-                                                            : transaction.paymentStatus === "pending"
-                                                            ? "text-yellow-500"
-                                                            : "text-red-500"
-                                                    }
+                                                <select
+                                                    value={transaction.paymentStatus}
+                                                    onChange={(e) => handleUpdateStatus(transaction.id, e.target.value)}
+                                                    className="border border-gray-300 rounded px-2 py-1"
                                                 >
-                                                    {transaction.paymentStatus}
-                                                </span>
+                                                    <option value="pending">Pending</option>
+                                                    <option value="paid">Paid</option>
+                                                    <option value="failed">Failed</option>
+                                                </select>
                                             </td>
                                             <td className="border border-gray-300 px-4 py-2">
                                                 {transaction.paymentDate

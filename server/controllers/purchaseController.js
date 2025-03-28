@@ -126,11 +126,17 @@ class purchaseController {
                 return res.status(500).json({ message: 'Failed to update transaction status' });
             }
     
-            res.status(200).json({ message: 'Transaction status updated' });
+            // Redirect based on transaction status
+            if (transaction_status === 'settlement' || transaction_status === 'capture') {
+                return res.redirect("https://mybooks.radendev.my.id/payment-success");
+            } else if (transaction_status === 'deny' || transaction_status === 'cancel' || transaction_status === 'expire') {
+                return res.redirect("https://mybooks.radendev.my.id/payment-failed");
+            }
     
+            res.sendStatus(200);
         } catch (error) {
             console.error("Webhook Error:", error);
-            res.status(500).json({ message: 'Internal server error' });
+            res.status(500).send("Webhook error");
         }
     }
 
