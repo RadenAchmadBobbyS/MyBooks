@@ -1,583 +1,190 @@
-## Branded-Things/Product API Documentation
+# MyBooks API Documentation
+
+## Overview
+
+This documentation provides details about the API endpoints available in the MyBooks application. The API is categorized into user, admin, book, favorite, purchase, transaction, and Gemini AI-related routes.
+
+---
 
 ## Endpoints
 
-List of Available Endpoints:
-
-- `POST /add-user`
-- `POST /login`
-- `POST /product`
-- `GET /product`
-- `PUT /product/:id`
-- `GET /product/:id`
-- `DELETE /product/:id`
-- `POST /category`
-- `GET /category`
-- `PUT /category/:id`
-- `GET /public/product` `Public Site`
-- `GET /public/product/:id` `Public Site`
-- `PATCH /product/:id/image-url` `Public Site`
-
-### POST /product
-
-#### Description
-
-- Create a new product data
-
-#### Request
-
-- Headers
-  ```json
-  {
-    "Content-Type": "application/json"
-  }
-  ```
-- Body
-  ```json
-  {
-    "name": "Red T-Shirt",
-    "description": "it's Red",
-    "price": 2000,
-    "stock": 5,
-    "imgUrl": "https://shorturl.at/CmXZ6",
-    "categoryId": 4,
-    "authorId": 1
-  }
-  ```
-
-#### Response
-
-_201 - Created_
-
-- Body
-  ```json
-  {
-    "id": 5,
-    "name": "Red T-Shirt",
-    "description": "it's Red",
-    "price": 2000,
-    "stock": 5,
-    "imgUrl": "https://shorturl.at/CmXZ6",
-    "categoryId": 4,
-    "authorId": 1,
-    "updatedAt": "2025-03-11T12:12:38.070Z",
-    "createdAt": "2025-03-11T12:12:38.070Z"
-  }
-  ```
-
-_400 - Bad Request_
-
-- Body
-  ```json
-  {
-    "message": "name is required",
-    "message": "desctiption is required",
-    "message": "price is required",
-    "message": "category id is required",
-    "message": "author id is required"
-  }
-  ```
-
-### GET /product
-
-#### Description
-
-- Get all the product data
-
-#### Response
-
-_200 - OK_
-
-- Body
-
-  ```json
-  [
-    {
-      "id": 4,
-      "name": "Red T-Shirt",
-      "description": "it's Red",
-      "price": 2000,
-      "stock": 5,
-      "imgUrl": "https://shorturl.at/CmXZ6",
-      "categoryId": 4,
-      "authorId": 1,
-      "createdAt": "2025-03-10T15:18:31.845Z",
-      "updatedAt": "2025-03-10T15:18:31.845Z"
-    }
-  ]
-  ```
-
-### PUT /product
-
-#### Description
-
-- Update product data
-
-#### Request
-
-- Headers
-  ```json
-  {
-    "Content-Type": "application/json"
-  }
-  ```
-- Body
-  ```json
-  {
-    "name": "Red T-Shirt 2nd",
-    "description": "it's Red",
-    "price": 2000,
-    "stock": 5,
-    "imgUrl": "https://shorturl.at/CmXZ6",
-    "categoryId": 4,
-    "authorId": 1
-  }
-  ```
-
-#### Response
-
-_201 - Created_
-
-- Body
-  ```json
-  {
-    "id": 5,
-    "name": "Red T-Shirt 2nd",
-    "description": "it's Red",
-    "price": 2000,
-    "stock": 5,
-    "imgUrl": "https://shorturl.at/CmXZ6",
-    "categoryId": 4,
-    "authorId": 1,
-    "updatedAt": "2025-03-11T12:12:38.070Z",
-    "createdAt": "2025-03-11T12:12:38.070Z"
-  }
-  ```
-
-_400 - Bad Request_
-
-- Body
-  ```json
-  {
-    "message": "name is required",
-    "message": "desctiption is required",
-    "message": "price is required",
-    "message": "category id is required",
-    "message": "author id is required"
-  }
-  ```
+### User Endpoints
 
-### GET /product/:id
-
-#### Description
-
-- Get a product data based on given id
-
-#### Response
-
-_200 - OK_
-
-- Body
-
-  ```json
-  {
-    "id": 4,
-    "name": "Red T-Shirt",
-    "description": "it's Red",
-    "price": 2000,
-    "stock": 5,
-    "imgUrl": "https://shorturl.at/CmXZ6",
-    "categoryId": 4,
-    "authorId": 1,
-    "createdAt": "2025-03-10T15:18:31.845Z",
-    "updatedAt": "2025-03-10T15:18:31.845Z"
-  }
-  ```
-
-  _404 - Not Found_
-
-- Body
-  ```json
-  {
-    "message": "Product with id 300 not found"
-  }
-  ```
-
-### Global Error
-
-#### Response
-
-_500 - Internal Server Error_
-
-- Body
-  ```json
-  {
-    "message": "Internal Server Error"
-  }
-  ```
+#### POST /google-login
 
-### DELETE /product/:id
+- **Description**: Log in using Google.
+- **Request**:
+  - Headers: `{ "Content-Type": "application/json" }`
+  - Body: `{ "token": "<Google Token>" }`
+- **Response**:
+  - 200: `{ "message": "Login successful" }`
+  - 400: `{ "message": "Invalid token" }`
 
-#### Description
-
-- Remove a product data based on given id
-
-#### Response
-
-_200 - OK_
-
-- Body
-
-  ```json
-  {
-    "message": "${products.name} success to delete"
-  }
-  ```
+#### POST /logout
 
-  _404 - Not Found_
+- **Description**: Log out the user.
+- **Response**:
+  - 200: `{ "message": "Logout successful" }`
 
-- Body
-  ```json
-  {
-    "message": "Product with id 911 not found"
-  }
-  ```
-
-### Global Error
-
-#### Response
-
-_500 - Internal Server Error_
-
-- Body
-  ```json
-  {
-    "message": "Internal Server Error"
-  }
-  ```
-
-### POST /category
-
-#### Description
-
-- Create a new category data
-
-#### Request
-
-- Headers
-  ```json
-  {
-    "Content-Type": "application/json"
-  }
-  ```
-- Body
-  ```json
-  {
-    "name": "Yellow"
-  }
-  ```
+#### GET /users/profile
 
-#### Response
+- **Description**: Get the profile of the logged-in user.
+- **Response**:
+  - 200: `{ "id": 1, "name": "John Doe", "email": "john@example.com" }`
 
-_201 - Created_
+#### PUT /users/profile
 
-- Body
-  ```json
-  {
-    "id": 8,
-    "name": "Yellow",
-    "createdAt": "2025-03-11T13:33:31.571Z",
-    "updatedAt": "2025-03-11T13:33:31.571Z"
-  }
-  ```
-
-_400 - Bad Request_
-
-- Body
-
-  ```json
-  {
-    "message": "name is required"
-  }
-  ```
-
-### GET /category
-
-#### Description
-
-- Get all the category data
-
-#### Response
-
-_200 - OK_
-
-- Body
-
-  ```json
-  [
-    {
-      "id": 1,
-      "name": "black",
-      "createdAt": "2025-03-10T15:18:27.563Z",
-      "updatedAt": "2025-03-10T15:18:27.563Z"
-    }
-  ]
-  ```
+- **Description**: Update the profile of the logged-in user.
+- **Request**:
+  - Body: `{ "name": "John Updated", "email": "john.updated@example.com" }`
+- **Response**:
+  - 200: `{ "message": "Profile updated successfully" }`
 
-### PUT /category/:id
+#### GET /users/purchases
 
-#### Description
-
-- Update product data
-
-#### Request
-
-- Headers
-  ```json
-  {
-    "Content-Type": "application/json"
-  }
-  ```
-- Body
-  ```json
-  {
-    "name": "black 2nd"
-  }
-  ```
-
-#### Response
-
-_201 - Created_
-
-- Body
-  ```json
-  {
-    "id": 4,
-    "name": "black 2nd",
-    "createdAt": "2025-03-10T15:18:27.563Z",
-    "updatedAt": "2025-03-11T13:44:12.828Z"
-  }
-  ```
+- **Description**: Get the purchase history of the logged-in user.
+- **Response**:
+  - 200: `[ { "id": 1, "book": "Book Title", "date": "2025-03-11" } ]`
 
-_400 - Bad Request_
+---
 
-- Body
-  ```json
-  {
-    "message": "name is required"
-  }
-  ```
+### Gemini AI Endpoint
 
-### GET /public/product Public Site
+#### POST /gemini
 
-#### Description
-
-- Get all the product data to public site
+- **Description**: Generate a response using Gemini AI.
+- **Request**:
+  - Body: `{ "query": "What is AI?" }`
+- **Response**:
+  - 200: `{ "response": "AI stands for Artificial Intelligence." }`
 
-#### Response
+---
 
-_200 - OK_
+### Book Endpoints
 
-- Body
-
-  ```json
-  [
-    {
-      "id": 2,
-      "name": "White T-Shirt",
-      "description": "it's White",
-      "price": 4000,
-      "stock": 5,
-      "imgUrl": "https://shorturl.at/CmXZ6",
-      "categoryId": 2,
-      "authorId": 1,
-      "createdAt": "2025-03-11T19:16:55.719Z",
-      "updatedAt": "2025-03-11T19:16:55.719Z"
-    }
-  ]
-  ```
+#### GET /books
 
-- Response (500 - ServerError)
+- **Description**: Get a list of all books.
+- **Response**:
+  - 200: `[ { "id": 1, "title": "Book Title", "author": "Author Name" } ]`
 
-_500 - Internal Server Error_
+#### GET /books/:id
 
-- Body
-  ```json
-  {
-    "message": "Internal Server Error"
-  }
-  ```
+- **Description**: Get details of a specific book by ID.
+- **Response**:
+  - 200: `{ "id": 1, "title": "Book Title", "author": "Author Name" }`
 
-### GET /public/product/:id Public Site
+#### GET /books/search
 
-#### Description
-
-- Get all the product data to public site
+- **Description**: Search for books by query.
+- **Request**:
+  - Query Params: `?q=searchTerm`
+- **Response**:
+  - 200: `[ { "id": 1, "title": "Book Title", "author": "Author Name" } ]`
 
-#### Response
+#### POST /admin/books
 
-_200 - OK_
+- **Description**: Add a new book (Admin only).
+- **Request**:
+  - Body: `{ "title": "New Book", "author": "Author Name" }`
+- **Response**:
+  - 201: `{ "message": "Book added successfully" }`
 
-- Body
-
-  ```json
-  [
-    {
-      "id": 1,
-      "name": "Black T-Shirt",
-      "description": "it's black",
-      "price": 2000,
-      "stock": 2,
-      "imgUrl": "https://res.cloudinary.com/dfdd1idfq/image/upload/v1741794845/product-image-url/q10itdpqdar7fotigdyz.jpg",
-      "categoryId": 1,
-      "authorId": 1,
-      "createdAt": "2025-03-11T19:16:55.719Z",
-      "updatedAt": "2025-03-12T15:54:07.000Z"
-    }
-  ]
-  ```
+#### PUT /admin/books/:id
 
-- Response body (404 - NotFound)
+- **Description**: Update a book by ID (Admin only).
+- **Request**:
+  - Body: `{ "title": "Updated Book", "author": "Updated Author" }`
+- **Response**:
+  - 200: `{ "message": "Book updated successfully" }`
 
-  ```json
-  {
-    "message": "string"
-  }
-  ```
-
-### PATCH /product/:id/image-url
+#### DELETE /admin/books/:id
 
-- Request Body
+- **Description**: Delete a book by ID (Admin only).
+- **Response**:
+  - 200: `{ "message": "Book deleted successfully" }`
 
-  ```json
+---
 
-    {
-      "productImage": < image file >
-    }
+### Favorite Endpoints
 
-  ```
+#### POST /favorites
 
-- Response body (200 - Created)
+- **Description**: Add a book to favorites.
+- **Request**:
+  - Body: `{ "bookId": 1 }`
+- **Response**:
+  - 201: `{ "message": "Book added to favorites" }`
 
-  ```json
-  {
-    "message": "string"
-  }
-  ```
-
-- Response body (404 - NotFound)
+#### GET /favorites
 
-  ```json
-  {
-    "message": "string"
-  }
-  ```
-
-- Response body (400 - BadRequest)
+- **Description**: Get the list of favorite books.
+- **Response**:
+  - 200: `[ { "id": 1, "title": "Favorite Book" } ]`
 
-  ```json
-  {
-    "message": "string"
-  }
-  ```
-
-- Response (500 - ServerError)
-
-_500 - Internal Server Error_
-
-- Body
-  ```json
-  {
-    "message": "Internal Server Error"
-  }
-  ```
-
-### POST /add-user
-
-- Request Header:
-
-  ```json
-  { "Authorization": "Bearer <your access token>" }
-  ```
-
-- Request Body
-
-  ```json
-  {
-    "email": "string",
-    "password": "string",
-    "phoneNumber": "string",
-    "addres": "string",
-    "username": "string"
-  }
-  ```
-
-- Response body (201 - Created)
-
-  ```json
-  {
-    "id": 4,
-    "email": "user2@gmail.com",
-    "phoneNumber": "02122",
-    "addres": "jl.kutil",
-    "username": "staff safro"
-  }
-  ```
-
-- Response body (400 - BadRequest)
-
-  ```json
-  {
-    "message": "string"
-  }
-  ```
-
-- Response (500 - ServerError)
-
-_500 - Internal Server Error_
-
-- Body
-  ```json
-  {
-    "message": "Internal Server Error"
-  }
-  ```
-
-### POST /login
-
-- Request Body
-
-  ```json
-  {
-    "email": "user1@gmail.com",
-    "password": "user1user1"
-  }
-  ```
-
-- Response (200 - Success Login)
-
-  ```json
-  {
-    "id": 2,
-    "email": "user1@gmail.com"
-  }
-  ```
-
-- Response (400 - BadRequest)
-
-  ```json
-  {
-    "message": "string"
-  }
-  ```
-
-- Response (401 - Unauthorized)
-
-  ```json
-  {
-    "message": "string"
-  }
-  ```
-
-  13.215.184.205
-  https://mybooks.radendev.my.id/
+---
+
+### Purchase Endpoints
+
+#### POST /purchases
+
+- **Description**: Create a new purchase.
+- **Request**:
+  - Body: `{ "bookId": 1, "quantity": 1 }`
+- **Response**:
+  - 201: `{ "message": "Purchase successful" }`
+
+#### POST /midtrans-webhook
+
+- **Description**: Handle Midtrans webhook for payment updates.
+- **Response**:
+  - 200: `{ "message": "Webhook received" }`
+
+---
+
+### Transaction Endpoints
+
+#### GET /transactions
+
+- **Description**: Get all transactions of the logged-in user.
+- **Response**:
+  - 200: `[ { "id": 1, "status": "Completed" } ]`
+
+#### GET /transactions/:id
+
+- **Description**: Get details of a specific transaction by ID.
+- **Response**:
+  - 200: `{ "id": 1, "status": "Completed" }`
+
+---
+
+### Admin Endpoints
+
+#### GET /admin/users
+
+- **Description**: Get a list of all users (Admin only).
+- **Response**:
+  - 200: `[ { "id": 1, "name": "User Name" } ]`
+
+#### PUT /admin/users/:id
+
+- **Description**: Update a user's role by ID (Admin only).
+- **Request**:
+  - Body: `{ "role": "admin" }`
+- **Response**:
+  - 200: `{ "message": "User role updated" }`
+
+#### DELETE /admin/users/:id
+
+- **Description**: Delete a user by ID (Admin only).
+- **Response**:
+  - 200: `{ "message": "User deleted successfully" }`
+
+---
+
+## Global Errors
+
+- **500 - Internal Server Error**: `{ "message": "Internal Server Error" }`
+- **401 - Unauthorized**: `{ "message": "Unauthorized" }`
+- **404 - Not Found**: `{ "message": "Resource not found" }`
+- **400 - Bad Request**: `{ "message": "Invalid request" }`

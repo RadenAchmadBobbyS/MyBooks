@@ -7,6 +7,9 @@ class geminiController {
         try {
             const { prompt, input } = req.body;
 
+            if (!prompt || prompt.trim() === '') {
+                return res.status(500).json({ message: 'Prompt cannot be empty' });
+            }
 
             if (/rekomendasi.*buku/i.test(prompt)) {
                 const books = await Book.findAll({ limit: 5 });
@@ -26,11 +29,11 @@ class geminiController {
                 }
 
                 const books = await Book.findAll({
-                    where: { title: { [Op.iLike]: `%${query}%` } }
+                    where: { title: { [Op.iLike]: `%{query}%` } }
                 });
 
                 if (books.length === 0) {
-                    return res.json({ response: `Maaf, buku berjudul "${query}" tidak ditemukan di database.` });
+                    return res.json({ response: `Maaf, buku berjudul \"${query}\" tidak ditemukan di database.` });
                 }
 
                 const bookList = books.map((book, idx) => `${idx + 1}. ${book.title} - ${book.author}`).join("\n");

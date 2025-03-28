@@ -1,5 +1,8 @@
 {
   "devDependencies": {
     "node-mocks-http": "^1.16.2"
+  },
+  "scripts": {
+    "test": "jest --coverage"
   }
 }

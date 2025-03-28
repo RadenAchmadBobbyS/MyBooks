@@ -1,5 +1,7 @@
 const jwt = require('jsonwebtoken');
 const { User } = require('../models')
+const { OAuth2Client } = require('google-auth-library');
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 class authMiddleware {
     static authenticate(req, res, next) {
@@ -39,13 +41,24 @@ class authMiddleware {
                     name: payload.name,
                     role: 'user'
                 });
+                return res.status(200).json({
+                    message: 'User created',
+                    user: {
+                        email: user.email,
+                        name: user.name,
+                        role: user.role
+                    }
+                });
             }
 
             req.user = user;
             next();
         } catch (error) {
-            console.log(error);
-            res.status(401).json({ message: 'Invalid Google token' });
+            if (error.message.includes('Invalid') || error.message.includes('invalid_token')) {
+                return res.status(401).json({ message: 'Invalid Google token' });
+            } else {
+                return res.status(403).json({ message: 'Token not provided' });
+            }
         }
     }
 
