@@ -66,7 +66,7 @@ class bookController {
                 imgUrl
             })
 
-            res.status(201).json({ message: 'Book added', books })
+            res.status(201).json({ message: 'Book added' })
         } catch (error) {
             console.log(error)
             res.status(500).json({ message: 'Internal server error' })
@@ -114,3 +114,7 @@ class bookController {
 }
 
 module.exports = bookController
+
+module.exports.someFunction = (req, res) => {
+  res.status(200).send({ message: 'Book function placeholder' });
+};

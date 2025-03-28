@@ -4,7 +4,8 @@
     "password": "postgres",
     "database": "mybooks-ip",
     "host": "localhost",
-    "dialect": "postgres"
+    "dialect": "postgres",
+    "logging": false
   },
   "test": {
     "username": "postgres",

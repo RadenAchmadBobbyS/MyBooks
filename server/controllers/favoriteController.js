@@ -26,7 +26,7 @@ class favoriteController {
                 userId,
                 bookId
             });
-            res.status(200).json(favorites);
+            res.status(201).json({ message: 'Book added to favorites'});
         } catch (error) {
             console.log(error);
             res.status(500).json({ message: 'Internal server error' });
@@ -52,3 +52,7 @@ class favoriteController {
 }
 
 module.exports = favoriteController
+
+module.exports.someFunction = (req, res) => {
+  res.status(200).send({ message: 'Favorite function placeholder' });
+};

@@ -5,7 +5,8 @@ const { Op } = require('sequelize');
 class geminiController { 
     static async generateRespons(req, res) {
         try {
-            const { prompt } = req.body;
+            const { prompt, input } = req.body;
+
 
             if (/rekomendasi.*buku/i.test(prompt)) {
                 const books = await Book.findAll({ limit: 5 });
@@ -46,3 +47,7 @@ class geminiController {
 }
 
 module.exports = geminiController;
+
+module.exports.someFunction = (req, res) => {
+  res.status(200).send({ message: 'Gemini function placeholder' });
+};

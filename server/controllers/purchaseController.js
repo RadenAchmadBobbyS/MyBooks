@@ -5,10 +5,27 @@ class purchaseController {
     static async createPurchase(req, res) {
         try {
             const { bookId } = req.body;
-            const userId = req.user.id;
+            const userId = req.user?.id;
+            const userEmail = req.user?.email;
+
+            if (!userId) {
+                return res.status(400).json({ message: 'User not authenticated' });
+            }
+
+            if (!bookId || isNaN(bookId)) {
+                return res.status(400).json({ message: 'Invalid bookId' });
+              }
+              
+              if (!req.user || !req.user.email) {
+                return res.status(400).json({ message: 'User email is required' });
+              }
 
             const books = await Book.findByPk(bookId);
-            if (!books) return res.status(404).json({ message: 'Book not found' })
+            if (!books) return res.status(404).json({ message: 'Book not found' });
+
+            if (isNaN(Number(books.price))) {
+                return res.status(400).json({ message: 'Invalid book price' });
+            }
 
             let snap = new midtransClient.Snap({
                 isProduction: false,
@@ -21,26 +38,31 @@ class purchaseController {
                     gross_amount: Number(books.price)
                 },
                 customer_details: {
-                    email: req.user.email
+                    email: userEmail
                 }
             };
 
-            const transaction = await snap.createTransaction(parameter);
+            try {
+                const transaction = await snap.createTransaction(parameter);
 
-            const purchase = await Purchase.create({
-                userId,
-                bookId,
-                transactionId: parameter.transaction_details.order_id,
-                paymentStatus: 'pending',
-                grossAmount: books.price,
-                paymentDate: new Date()
-            });
+                const purchase = await Purchase.create({
+                    userId,
+                    bookId,
+                    transactionId: parameter.transaction_details.order_id,
+                    paymentStatus: 'pending',
+                    grossAmount: books.price,
+                    paymentDate: new Date()
+                });
 
-            res.status(201).json({
-                purchase,
-                token: transaction.token,
-                redirect_url: transaction.redirect_url
-            });
+                res.status(201).json({
+                    purchase,
+                    token: transaction.token,
+                    redirect_url: transaction.redirect_url
+                });
+            } catch (error) {
+                console.log('Midtrans error:', error);
+                return res.status(500).json({ message: 'Internal server error' });
+            }
         } catch (error) {
             console.log(error);
             res.status(500).json({ message: 'Internal server error' });

@@ -1,26 +1,18 @@
 'use strict';
 
-/** @type {import('sequelize-cli').Migration} */
 module.exports = {
-  async up (queryInterface, Sequelize) {
-    /**
-     * Add altering commands here.
-     *
-     * Example:
-     * await queryInterface.createTable('users', { id: Sequelize.INTEGER });
-     */
-    await queryInterface.addColumn("Books", "imgUrl", {
-      type: Sequelize.TEXT
-    })
+  async up(queryInterface, Sequelize) {
+    // Periksa apakah kolom sudah ada sebelum menambahkannya
+    const tableDescription = await queryInterface.describeTable('Books');
+    if (!tableDescription.imgUrl) {
+      await queryInterface.addColumn('Books', 'imgUrl', {
+        type: Sequelize.STRING,
+        allowNull: true,
+      });
+    }
   },
 
-  async down (queryInterface, Sequelize) {
-    /**
-     * Add reverting commands here.
-     *
-     * Example:
-     * await queryInterface.dropTable('users');
-     */
-    await queryInterface.removeColumn("Books", "imgUrl");
-  }
+  async down(queryInterface, Sequelize) {
+    await queryInterface.removeColumn('Books', 'imgUrl');
+  },
 };
