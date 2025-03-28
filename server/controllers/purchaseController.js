@@ -89,6 +89,7 @@ class purchaseController {
             const { order_id, transaction_status } = req.body;
     
             if (!order_id) {
+                console.error("Missing order_id in webhook payload");
                 return res.status(400).json({ message: "Missing order_id" });
             }
     
@@ -110,20 +111,25 @@ class purchaseController {
     
             const purchase = await Purchase.findOne({ where: { transactionId: order_id }});
             if (!purchase) {
-                console.log(`Transaction not found: ${order_id}`);
+                console.error(`Transaction not found for order_id: ${order_id}`);
                 return res.status(404).json({ message: 'Transaction not found' });
             }
     
-            await purchase.update({ 
-                paymentStatus, 
-                paymentDate: new Date() 
-            });
+            try {
+                await purchase.update({ 
+                    paymentStatus, 
+                    paymentDate: new Date() 
+                });
+                console.log(`Transaction ${order_id} updated to status: ${paymentStatus}`);
+            } catch (updateError) {
+                console.error(`Failed to update transaction ${order_id}:`, updateError);
+                return res.status(500).json({ message: 'Failed to update transaction status' });
+            }
     
-            console.log(`Transaction ${order_id} updated to status: ${paymentStatus}`);
             res.status(200).json({ message: 'Transaction status updated' });
     
         } catch (error) {
-            console.log("Webhook Error:", error);
+            console.error("Webhook Error:", error);
             res.status(500).json({ message: 'Internal server error' });
         }
     }
