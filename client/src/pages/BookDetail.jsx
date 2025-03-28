@@ -1,9 +1,10 @@
-import { useParams } from "react-router-dom"
+import { Link, useParams } from "react-router-dom"
 import { useDispatch, useSelector } from "react-redux"
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { fetchBooksById } from "../store/bookSlice";
-import { purchaseBook } from "../store/transactionSlice";
 import { addToFavorite, fetchFavorites } from "../store/favoriteSlice";
+import Swal from "sweetalert2";
+import Checkout from "../components/Checkout";
 
 export default function BookDetail() {
     const { id } = useParams();
@@ -12,39 +13,37 @@ export default function BookDetail() {
     const token = useSelector((state) => state.auth?.token) || localStorage.getItem("token");
     console.log(bookDetail, "<<<from redux")
 
+    const [isOpen, setIsOpen] = useState(false);
+    const [isPaid, setIsPaid] = useState(false);
+
+    const checkPaymentStatus = async () => {
+        try {
+            const response = await http({
+                method: "GET",
+                url: `/transactions`, // Endpoint untuk mendapatkan transaksi pengguna
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+
+            // Periksa apakah ada transaksi dengan bookId yang sesuai dan status 'paid'
+            const paidTransaction = response.data.find(
+                (transaction) => transaction.bookId === parseInt(id) && transaction.paymentStatus === "paid"
+            );
+
+            if (paidTransaction) {
+                setIsPaid(true); // Set status pembayaran menjadi true
+            }
+        } catch (error) {
+            console.error("Error checking payment status:", error);
+        }
+    };
+
     useEffect(() => {
         if (id) {
             dispatch(fetchBooksById(id))
         }
     }, [dispatch, id])
-
-    
-    const handleBuy = async () => {
-        if (!token) {
-            alert("Silakan login terlebih dahulu!");
-            return;
-        }
-
-        try {
-            const response = await dispatch(purchaseBook({ bookId: id, token })).unwrap();
-            if (response.redirect_url) {
-                window.location.href = response.redirect_url;
-            }
-        } catch (error) {
-            let message = "Something went wrong!";
-                        if (error.response) {
-                          console.log(error.response.data);
-                          console.log(error.response.status);
-                          console.log(error.response.headers);
-                          message = error.response.data.message;
-                        }
-                        Swal.fire({
-                          title: "Error!",
-                          text: message,
-                          icon: "error",
-                        });
-        }
-    };
 
     
     const handleAddToFavorite = async () => {
@@ -60,8 +59,18 @@ export default function BookDetail() {
             alert("Buku berhasil ditambahkan ke favorit!");
             console.log("Respons berhasil:", response);
         } catch (error) {
-            console.error("Error menambahkan ke favorit:", error);
-            alert(error.message || "Gagal menambahkan ke favorit. Silakan coba lagi.");
+            let message = "Something went wrong!";
+                                        if (error.response) {
+                                          console.log(error.response.data);
+                                          console.log(error.response.status);
+                                          console.log(error.response.headers);
+                                          message = error.response.data.message;
+                                        }
+                                        Swal.fire({
+                                          title: "Error!",
+                                          text: message,
+                                          icon: "error",
+                                        });
         }
         dispatch(fetchFavorites(token));
     };
@@ -69,7 +78,6 @@ export default function BookDetail() {
     return (
         <>
         <div className="h-screen flex flex-col lg:flex-row items-center lg:items-start p-15 bg-white mx-auto">
-        
         <div className="w-full lg:w-1/3 flex justify-center">
             <img src={bookDetail.imgUrl} alt="Book Cover" className="rounded-lg shadow-2xl w-50"/>
         </div>
@@ -89,10 +97,26 @@ export default function BookDetail() {
             </div>
 
             <div className="flex space-x-4 mt-4">
-            <button onClick={handleBuy} className="btn btn-neutral" >Beli</button>
+            <button onClick={() => setIsOpen(true)} className="btn btn-neutral" >Beli</button>
+                <Checkout
+                    isOpen={isOpen}
+                    onClose={() => setIsOpen(false)}
+                    book={bookDetail}
+                    price={208934}
+                    paymentMethod="Midtrans Payment"
+                />
             <button onClick={handleAddToFavorite} className="btn btn-ghost text-black hover:bg-transparent hover:border-white hover:text-black">⭐ Tambahkan ke Favorit</button>
+            <div className="pr-30 text-gray-400">
+                {Number(bookDetail.price) === 0 || isPaid ? ( // Jika buku gratis atau sudah dibayar
+                    <Link to="/read" className="btn btn-dash btn-success">Read now</Link> // Tombol aktif
+                ) : (
+                    <button className="btn btn-dash btn-warning">
+                        🔒 Locked
+                    </button> // Tombol terkunci jika belum dibayar
+                )}
             </div>
-
+            </div>
+            
             <p className="mt-6 text-gray-600 text-sm">
             Anda dapat membagikan buku ini kepada keluarga Anda.{" "}
             <a href="#" className="text-blue-600">kirim lewat email</a>
@@ -104,6 +128,7 @@ export default function BookDetail() {
         </div>
 
         <div className="bg-white px-50 -mt-55">
+
                     {/* Judul */}
                     <h2 className="text-xl font-semibold text-black mb-7">Tentang buku ini</h2>
 
@@ -124,7 +149,7 @@ export default function BookDetail() {
                     </p>
                     </div>
 
-
+        
         </>
     )
 }

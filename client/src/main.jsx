@@ -10,6 +10,7 @@ import BookDetail from './pages/BookDetail'
 import Favorites from './pages/Favorites'
 import Profile from './pages/Profile'
 import AdminPanel from './pages/AdminPanel'
+import Checkout from './components/Checkout'
 
 createRoot(document.getElementById('root')).render(
   <ReduxProvider store={store}>
