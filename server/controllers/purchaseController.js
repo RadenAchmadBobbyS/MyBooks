@@ -80,24 +80,32 @@ class purchaseController {
                 return res.status(400).json({ message: "Missing order_id" });
             }
 
+            const validStatuses = ['settlement', 'capture', 'expire', 'cancel', 'pending'];
+            if (!validStatuses.includes(transaction_status)) {
+                console.warn(`Unexpected transaction_status: ${transaction_status}`);
+                return res.status(500).json({ message: 'Internal server error' });
+            }
+
+            let resolvedStatus = transaction_status;
+
             const purchase = await Purchase.findOne({ where: { transactionId: order_id }});
             if (!purchase) return res.status(404).json({ message: 'Transaction not found'});
 
             let paymentStatus;
 
-            if (transaction_status === 'settlement' || transaction_status === 'capture') {
-                paymentStatus = 'paid'
-            } else if (transaction_status === 'expire' || transaction_status === 'cancel') {
-                paymentStatus = 'failed'
+            if (resolvedStatus === 'settlement' || resolvedStatus === 'capture') {
+                paymentStatus = 'paid';
+            } else if (resolvedStatus === 'expire' || resolvedStatus === 'cancel') {
+                paymentStatus = 'failed';
             } else {
-                paymentStatus = 'pending'
+                paymentStatus = 'pending';
             }
 
             await Purchase.update({ 
                 paymentStatus, paymentDate: new Date() 
             }, { where: { transactionId: order_id }});
 
-            res.status(200).json({ message: 'Transaction status updated' })
+            res.status(200).json({ message: 'Transaction status updated' });
         } catch (error) {
             console.log(error);
             res.status(500).json({ message: 'Internal server error' });

@@ -7,7 +7,7 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 async function generateText(prompt) {
     try {
         if (!prompt) {
-            throw new Error('Input cannot be empty')
+            throw new Error('Input cannot be empty');
         }
         const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
 
@@ -35,22 +35,28 @@ async function generateText(prompt) {
             formattedPrompt = `${prompt}\n(Jawablah dalam Bahasa Indonesia secara ringkas dan jelas tanpa format JSON.)`;
         }
 
-        const result = await model.generateContent(formattedPrompt);
-        const response = await result.response;
-        let text = response.text();
-        text = text.replace(/```json|```/g, '').trim();
-        try {
-            text = JSON.parse(text.trim());
-        } catch (e) {
-            
-        }
+        console.log('Formatted Prompt:', formattedPrompt); 
 
-        return text;
+        const result = await model.generateContent(formattedPrompt);
+        const text = result.text; 
+        console.log('Raw API Response:', text);
+
+        let parsedText;
+        try {
+            parsedText = JSON.parse(text.replace(/```json|```/g, '').trim());
+            if (parsedText && parsedText.response && Array.isArray(parsedText.response)) {
+                return parsedText;
+            } else {
+                throw new Error('Invalid JSON structure');
+            }
+        } catch (e) {
+            console.log('JSON Parsing Error or Invalid Structure:', e); 
+            return "Terjadi kesalahan dalam memproses jawaban."; 
+        }
     } catch (error) {
-        console.log(error);
+        console.log('Error in generateText:', error); 
         return "Terjadi kesalahan dalam memproses jawaban.";
     }
 }
-
 
 module.exports = generateText;

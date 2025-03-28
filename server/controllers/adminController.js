@@ -48,21 +48,25 @@ class adminController {
 
     static async updateUserRole(req, res) {
         try {
-            const { id } = req.user.id;
+            const { id } = req.params; // Corrected to use req.params.id
             const { role } = req.body;  
+
+            if (!role) {
+                return res.status(400).json({ message: 'Role is required' }); // Added validation for missing role
+            }
 
             const user = await User.findByPk(id);
             if (!user) {
-                return res.status(404).json({ message: `User ${id} not found` })
+                return res.status(404).json({ message: `User ${id} not found` });
             }
 
-            user.role = role
+            user.role = role;
             await user.save();
 
-            res.status(200).json({ message: `user ${id} update role`})
+            res.status(200).json({ message: `User ${id} role updated successfully` });
         } catch (error) {
             console.log(error);
-            res.status(500).json({ message: 'Internal server error' })
+            res.status(500).json({ message: 'Internal server error' });
         }
     }
 

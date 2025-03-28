@@ -99,7 +99,8 @@ describe('Admin Controller', () => {
 
     await adminController.updateUserRole(req, res);
 
-    expect(res.statusCode).toBe(500);
+    expect(res.statusCode).toBe(200);
+    expect(res._getJSONData()).toEqual({ message: 'User 1 role updated successfully' });
   });
 
   it('should return 404 if user is not found when updating role', async () => {
@@ -113,7 +114,7 @@ describe('Admin Controller', () => {
 
     await adminController.updateUserRole(req, res);
 
-    expect(res.statusCode).toBe(500);
+    expect(res.statusCode).toBe(404);
   });
 
   it('should return 400 if role is missing when updating user role', async () => {
@@ -127,8 +128,8 @@ describe('Admin Controller', () => {
 
     await adminController.updateUserRole(req, res);
 
-    expect(res.statusCode).toBe(500);
-    expect(res._getJSONData()).toEqual({ message: 'Internal server error' });
+    expect(res.statusCode).toBe(400);
+    expect(res._getJSONData()).toEqual({ message: 'Role is required' });
   });
 
   it('should handle missing role in updateUserRole', async () => {
@@ -142,8 +143,8 @@ describe('Admin Controller', () => {
 
     await adminController.updateUserRole(req, res);
 
-    expect(res.statusCode).toBe(500);
-    expect(res._getJSONData()).toEqual({ message: `Internal server error` });
+    expect(res.statusCode).toBe(400); // Updated to expect 400
+    expect(res._getJSONData()).toEqual({ message: 'Role is required' }); // Updated expected message
   });
 
   it('should delete a user', async () => {
@@ -185,5 +186,49 @@ describe('Admin Controller', () => {
     expect(Purchase.findAll).toHaveBeenCalled();
     expect(res.statusCode).toBe(200);
     expect(res._getJSONData()).toEqual([]);
+  });
+});
+
+describe('Admin Controller Additional Tests', () => {
+  it('should return 404 if user is not found when updating role', async () => {
+    const req = httpMocks.createRequest({
+      params: { id: 999 },
+      body: { role: 'admin' },
+    });
+    const res = httpMocks.createResponse();
+
+    User.findByPk.mockResolvedValue(null);
+
+    await adminController.updateUserRole(req, res);
+
+    expect(res.statusCode).toBe(404);
+    expect(res._getJSONData()).toEqual({ message: 'User 999 not found' });
+  });
+
+  it('should return 400 if role is missing when updating user role', async () => {
+    const req = httpMocks.createRequest({
+      params: { id: 1 },
+      body: {},
+    });
+    const res = httpMocks.createResponse();
+
+    User.findByPk.mockResolvedValue({ id: 1, save: jest.fn().mockResolvedValue(), role: 'user' });
+
+    await adminController.updateUserRole(req, res);
+
+    expect(res.statusCode).toBe(400);
+    expect(res._getJSONData()).toEqual({ message: 'Role is required' });
+  });
+
+  it('should return 404 if user is not found when deleting', async () => {
+    const req = httpMocks.createRequest({ params: { id: 999 } });
+    const res = httpMocks.createResponse();
+
+    User.findByPk.mockResolvedValue(null);
+
+    await adminController.deleteUser(req, res);
+
+    expect(res.statusCode).toBe(404);
+    expect(res._getJSONData()).toEqual({ message: 'User 999 not found' });
   });
 });
