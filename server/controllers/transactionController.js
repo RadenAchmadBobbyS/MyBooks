@@ -41,3 +41,7 @@ class transactionController {
 }
 
 module.exports = transactionController
+
+module.exports.someFunction = (req, res) => {
+  res.status(200).send({ message: 'Transaction function placeholder' });
+};

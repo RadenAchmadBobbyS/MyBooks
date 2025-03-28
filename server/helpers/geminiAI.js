@@ -6,6 +6,9 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 async function generateText(prompt) {
     try {
+        if (!prompt) {
+            throw new Error('Input cannot be empty')
+        }
         const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
 
         let formattedPrompt;

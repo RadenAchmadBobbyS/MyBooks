@@ -51,13 +51,15 @@ class adminController {
             const { id } = req.user.id;
             const { role } = req.body;  
 
-            const user = await User.findOne(id);
-            if (!user) return res.status(404).json({ message: 'User not found' })
+            const user = await User.findByPk(id);
+            if (!user) {
+                return res.status(404).json({ message: `User ${id} not found` })
+            }
 
             user.role = role
             await user.save();
 
-            res.status(200).json({ message: 'user role updated', user })
+            res.status(200).json({ message: `user ${id} update role`})
         } catch (error) {
             console.log(error);
             res.status(500).json({ message: 'Internal server error' })
@@ -69,7 +71,9 @@ class adminController {
             const id = req.params.id;
 
             const user = await User.findByPk(id);
-            if (!user) return res.status(404).json({ message: 'User not found' })
+            if (!user) {
+                return res.status(404).json({ message: `User ${id} not found` })
+            }
 
             await User.destroy({ where: { id: id }});
             res.status(200).json({ message: `user ${user.name} success deleted` })

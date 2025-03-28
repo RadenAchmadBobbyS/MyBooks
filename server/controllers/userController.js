@@ -48,7 +48,7 @@ const jwt = require('jsonwebtoken')
                 const id = req.user.id
                 const user = await User.findByPk(id);
 
-                if (!user) return res.status(404).json({ message: 'User not found' })
+               
                 
                 res.status(200).json(user);
             } catch (error) {
@@ -63,7 +63,7 @@ const jwt = require('jsonwebtoken')
                 const id = req.user.id
 
                 const user = await User.findByPk(id)
-                if (!user) return res.status(404).json({ message: 'User not found' })
+                if (!user) return res.status(404).json({ message: `User ${id} not found` })
 
                 user.name = name;
                 await user.save();
@@ -96,3 +96,7 @@ const jwt = require('jsonwebtoken')
     }
 
     module.exports = userController
+
+    module.exports.someFunction = (req, res) => {
+        res.status(200).send({ message: 'User function placeholder' });
+    };

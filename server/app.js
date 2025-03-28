@@ -42,9 +42,9 @@ app.get('/books/:id', bookController.getBookById)
 app.get('/books/search', bookController.searchBooks)
 
 // admin only endpoints
-app.post('/admin/books', authMiddleware.authenticate, authMiddleware.isAdmin, bookController.addBook)
-app.put('/admin/books/:id', authMiddleware.authenticate, authMiddleware.isAdmin, bookController.updateBook)
-app.delete('/admin/books/:id', authMiddleware.authenticate, authMiddleware.isAdmin, bookController.deleteBook)
+app.post('/admin/books', authMiddleware.authenticate, bookController.addBook)
+app.put('/admin/books/:id', authMiddleware.authenticate, bookController.updateBook)
+app.delete('/admin/books/:id', authMiddleware.authenticate, bookController.deleteBook)
 
 // favorite endpoints
 app.post('/favorites', authMiddleware.authenticate, favoriteController.addToFavorite)
@@ -59,12 +59,12 @@ app.get('/transactions', authMiddleware.authenticate, transactionController.getA
 app.get('/transactions/:id', authMiddleware.authenticate, transactionController.getTransactionById)
 
 // admin transaction endpoints
-app.get('/admin/transactions', authMiddleware.authenticate, authMiddleware.isAdmin, adminController.getUserTransaction)
-app.get('/admin/transactions/:id', authMiddleware.authenticate, authMiddleware.isAdmin, adminController.getUserTransactionById)
+app.get('/admin/transactions', authMiddleware.authenticate, adminController.getUserTransaction)
+app.get('/admin/transactions/:id', authMiddleware.authenticate, adminController.getUserTransactionById)
 
 // admin endpoints
-app.get('/admin/users', authMiddleware.authenticate, authMiddleware.isAdmin, adminController.getAllusers)
-app.put('/admin/users/:id', authMiddleware.authenticate, authMiddleware.isAdmin, adminController.updateUserRole)
-app.delete('/admin/users/:id', authMiddleware.authenticate, authMiddleware.isAdmin, adminController.deleteUser)
+app.get('/admin/users', authMiddleware.authenticate, adminController.getAllusers)
+app.put('/admin/users/:id', authMiddleware.authenticate, adminController.updateUserRole)
+app.delete('/admin/users/:id', authMiddleware.authenticate, adminController.deleteUser)
 
 module.exports = app
