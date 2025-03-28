@@ -12,8 +12,18 @@ export const fetchGeminiResponse = createAsyncThunk("chat/fetchResponse", async 
       console.log("Response dari API:", response.data);
       return { user: prompt, bot: response.data.response };
     } catch (error) {
-      console.log(error, 'chat')
-      return rejectWithValue(error.response?.data?.message || "Error fetching AI response");
+      let message = "Something went wrong!";
+                  if (error.response) {
+                    console.log(error.response.data);
+                    console.log(error.response.status);
+                    console.log(error.response.headers);
+                    message = error.response.data.message;
+                  }
+                  Swal.fire({
+                    title: "Error!",
+                    text: message,
+                    icon: "error",
+                  });
     }
   }
 );

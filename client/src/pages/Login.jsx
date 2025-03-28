@@ -23,7 +23,18 @@ export default function Login() {
 
           navigate('/')
         } catch (error) {
-          console.log(error)
+          let message = "Something went wrong!";
+                      if (error.response) {
+                        console.log(error.response.data);
+                        console.log(error.response.status);
+                        console.log(error.response.headers);
+                        message = error.response.data.message;
+                      }
+                      Swal.fire({
+                        title: "Error!",
+                        text: message,
+                        icon: "error",
+                      });
         }
       }
 
