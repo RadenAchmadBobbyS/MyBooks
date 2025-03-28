@@ -5,3 +5,13 @@ const http = axios.create({
 });
 
 export default http
+
+export const updatePaymentStatus = async (transactionId, status) => {
+  try {
+    const response = await http.patch(`/transactions/${transactionId}`, { paymentStatus: status });
+    return response.data;
+  } catch (error) {
+    console.error("Error updating payment status:", error);
+    throw error;
+  }
+};
