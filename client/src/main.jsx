@@ -10,7 +10,8 @@ import BookDetail from './pages/BookDetail'
 import Favorites from './pages/Favorites'
 import Profile from './pages/Profile'
 import AdminPanel from './pages/AdminPanel'
-import Checkout from './components/Checkout'
+import PaymentStatus from './pages/PaymentStatus'
+
 
 createRoot(document.getElementById('root')).render(
   <ReduxProvider store={store}>
@@ -22,6 +23,7 @@ createRoot(document.getElementById('root')).render(
   <Route element={<MainLayout />}>
   <Route path='/' element={<HomePage />}/>
   <Route path='/books/:id' element={<BookDetail />}/>
+  <Route path="/payment-status" element={<PaymentStatus />} />
   <Route path='/profile' element={<Profile />}/>
   <Route path='/favorites' element={<Favorites />}/>
   </Route>

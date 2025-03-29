@@ -120,7 +120,7 @@ export default function BookDetail() {
                         </button>
                         <div className="pr-30 text-gray-400">
                             {Number(bookDetail.price) === 0 || isPaid ? ( // Jika buku gratis atau sudah dibayar
-                                <Link to="/read" className="btn btn-dash btn-success">
+                                <Link to={`/books/read/${bookDetail.id}`} className="btn btn-dash btn-success">
                                     Read now
                                 </Link> // Tombol aktif
                             ) : (
