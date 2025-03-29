@@ -20,7 +20,7 @@ export default function Profile() {
                     Authorization: `Bearer ${token}`
                 }
             });
-            setTransactions(response.data); // Simpan data transaksi ke state
+            setTransactions(response.data); // Simpan data transaksi langsung dari server tanpa mengubah status secara manual
         } catch (error) {
             let message = "Something went wrong!";
             if (error.response) {
@@ -36,25 +36,6 @@ export default function Profile() {
             });
         }
     }
-
-    // Fungsi untuk mengupdate status pembayaran
-    const handleUpdateStatus = async (transactionId, newStatus) => {
-        try {
-            await dispatch(updateTransactionStatus({ transactionId, status: newStatus })).unwrap();
-            Swal.fire({
-                title: "Success!",
-                text: "Payment status updated successfully.",
-                icon: "success",
-            });
-            fetchTransaction(); // Refresh data transaksi setelah update
-        } catch (error) {
-            Swal.fire({
-                title: "Error!",
-                text: error || "Failed to update payment status.",
-                icon: "error",
-            });
-        }
-    };
 
     useEffect(() => {
         fetchTransaction(); // Ambil data transaksi saat komponen dirender
@@ -145,17 +126,7 @@ export default function Profile() {
                                         <tr key={transaction.id} className="hover:bg-gray-50">
                                             <td className="border border-gray-300 px-4 py-2">{transaction.Book?.title || "Unknown Book"}</td>
                                             <td className="border border-gray-300 px-4 py-2">{transaction.transactionId}</td>
-                                            <td className="border border-gray-300 px-4 py-2">
-                                                <select
-                                                    value={transaction.paymentStatus}
-                                                    onChange={(e) => handleUpdateStatus(transaction.id, e.target.value)}
-                                                    className="border border-gray-300 rounded px-2 py-1"
-                                                >
-                                                    <option value="pending">Pending</option>
-                                                    <option value="paid">Paid</option>
-                                                    <option value="failed">Failed</option>
-                                                </select>
-                                            </td>
+                                            <td className="border border-gray-300 px-4 py-2">{transaction.paymentStatus}</td>
                                             <td className="border border-gray-300 px-4 py-2">
                                                 {transaction.paymentDate
                                                     ? new Date(transaction.paymentDate).toLocaleDateString()
